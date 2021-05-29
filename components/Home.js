@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import MovieList from "./MovieList";
 
 export default function Home() {
     const [name, setName] = useState(null);
@@ -63,26 +64,7 @@ export default function Home() {
             </View>
         );
     } else {
-        return (
-            <View style={styles.container}>
-                <View>
-                    <TouchableOpacity style={styles.profileBtn}>
-                        <MaterialCommunityIcons name="account" size={26} />
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.greeting}>
-                    <Text style={{ color: "#fff", fontSize: 18 }}>
-                        Hello {name}
-                    </Text>
-                    <TouchableOpacity
-                        style={styles.submitBtn}
-                        onPress={removeItem}
-                    >
-                        <Text style={{ fontSize: 18 }}>Logout</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        );
+        return <MovieList />;
     }
 }
 

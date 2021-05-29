@@ -1,2 +1,1 @@
-export const BASE_URL =
-    "https://movie-database-imdb-alternative.p.rapidapi.com/";
+export const BASE_URL = "http://www.omdbapi.com/?apikey=3620d507&";
