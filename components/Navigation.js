@@ -12,7 +12,7 @@ export default function Navigation() {
         <Tab.Navigator
             initialRouteName="Home"
             activeColor="#fff"
-            barStyle={{ backgroundColor: "#133b5c" }}
+            barStyle={{ backgroundColor: "#1E1B26" }}
         >
             <Tab.Screen
                 name="Home"
@@ -28,7 +28,7 @@ export default function Navigation() {
                     ),
                 }}
             />
-            <Tab.Screen
+            {/* <Tab.Screen
                 name="Favourites"
                 component={Favourites}
                 options={{
@@ -41,7 +41,7 @@ export default function Navigation() {
                         />
                     ),
                 }}
-            />
+            /> */}
             <Tab.Screen
                 name="Watchlist"
                 component={WatchList}

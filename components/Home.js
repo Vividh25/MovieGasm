@@ -6,12 +6,19 @@ import {
     TextInput,
     StyleSheet,
     TouchableOpacity,
+    Platform,
+    StatusBar,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import MovieList from "./MovieList";
+import { Searchbar } from "react-native-paper";
+import { getMovies } from "../Redux/actions";
+import axios from "axios";
+import { BASE_URL } from "../config/api";
 
 export default function Home() {
+    const data = [];
     const [name, setName] = useState(null);
     const [user, setUser] = useState(false);
 
@@ -72,32 +79,19 @@ const styles = StyleSheet.create({
     container: {
         // alignItems: "center",
         // justifyContent: "center",
-        backgroundColor: "#1d2d50",
+        backgroundColor: "#1E1B26",
         flex: 1,
     },
-    greeting: {
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: "55%",
-        // backgroundColor: "#1d2d50",
-        // height: "100%",
-    },
     input: {
+        marginRight: 200,
         color: "#fff",
-        borderWidth: 1,
-        borderColor: "grey",
-        borderRadius: 10,
-        padding: 15,
+        // borderWidth: 1,
+        // borderColor: "white",
+        // borderRadius: 10,
+        padding: 5,
     },
     submitBtn: {
         marginTop: 20,
         borderRadius: 15,
-    },
-    profileBtn: {
-        // backgroundColor: "#1d2d50",
-        marginTop: 30,
-        marginLeft: 370,
-        borderColor: "#fff",
-        borderRadius: 10,
     },
 });

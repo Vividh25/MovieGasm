@@ -7,12 +7,12 @@ export const ADD_TO_WATCHLIST = "ADD_TO_WATCHLIST";
 export const REMOVE_FROM_FAV = "REMOVE_FROM_FAV";
 export const REMOVE_FROM_WATCHLIST = "REMOVE_FROM_WATCHLIST";
 
-export const getMovies = () => {
+export const getMovies = (props) => {
     return (dispatch) => {
         const response = {
             method: "GET",
             url: `${BASE_URL}`,
-            params: { i: "tt0848228" },
+            params: { s: props.search },
         };
         axios
             .request(response)

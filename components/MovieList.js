@@ -1,6 +1,4 @@
-import React from "react";
-import { useEffect } from "react";
-import { render } from "react-dom";
+import React, { useEffect, useState } from "react";
 import {
     View,
     Text,
@@ -10,29 +8,38 @@ import {
     Platform,
     StatusBar,
     Button,
+    StyleSheet,
+    TextInput,
 } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { getMovies } from "../Redux/actions";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import axios from "axios";
 
 export default function MovieList() {
-    const data = [];
-    const { movies } = useSelector((state) => state.moviesReducer);
-    // console.log(movies.Title);
-    data.push(movies);
-    // console.log(data);
-
-    const dispatch = useDispatch();
-
-    const fetchMovies = () => dispatch(getMovies());
-
-    useEffect(() => {
-        // console.log("This works too");
-        fetchMovies();
-    }, []);
+    const [search, setSearch] = useState("");
+    // console.log("This is working");
+    const dataArray = [];
+    const [data, setData] = useState({});
+    const handleSearch = (text) => {
+        setSearch(text);
+        axios
+            .get(`http://www.omdbapi.com/?apikey=3620d507&t=${search}&p=10`)
+            .then((res) => {
+                if (res.data) {
+                    setData(res.data);
+                    console.log(dataArray);
+                }
+                // dataArray.push(data);
+                // console.log(dataArray);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+    dataArray.push(data);
 
     const renderItem = ({ item }) => {
         // console.log(item.title);
+        console.log("renderItem works");
         return (
             <View style={{ marginVertical: 12 }}>
                 <View style={{ flexDirection: "row", flex: 1 }}>
@@ -40,7 +47,7 @@ export default function MovieList() {
                     <Image
                         source={{ uri: item.Poster }}
                         resizeMode="cover"
-                        style={{ width: 100, height: 150, borderRadius: 10 }}
+                        style={{ width: 100, height: 150 }}
                     />
                     <View style={{ flex: 1, marginLeft: 12 }}>
                         <View>
@@ -61,11 +68,14 @@ export default function MovieList() {
                                 alignItems: "center",
                             }}
                         >
-                            <MaterialCommunityIcons
-                                color="#64676D"
-                                name="movie"
-                                size={20}
-                            />
+                            <TouchableOpacity>
+                                <MaterialCommunityIcons
+                                    color="#64676D"
+                                    name="heart"
+                                    size={20}
+                                    // style={{paddingLeft: 16}}
+                                />
+                            </TouchableOpacity>
                             <MaterialCommunityIcons
                                 color="#64676D"
                                 name="star"
@@ -86,7 +96,11 @@ export default function MovieList() {
                                 {item.Rated}
                             </Text>
                         </View>
-                        {/* <View></View> */}
+                        <View style={{ marginTop: 2 }}>
+                            <Text style={{ color: "#64676D" }}>
+                                {item.Plot}
+                            </Text>
+                        </View>
                     </View>
                 </View>
             </View>
@@ -102,18 +116,43 @@ export default function MovieList() {
                     Platform.OS === "android" ? StatusBar.currentHeight : 0,
             }}
         >
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <MaterialCommunityIcons
+                    color="white"
+                    name="movie-search"
+                    size={20}
+                    style={{ paddingLeft: 12 }}
+                />
+                <TextInput
+                    placeholder="Search here.."
+                    placeholderTextColor="#fff"
+                    fontSize={20}
+                    style={styles.input}
+                    onChangeText={(text) => handleSearch(text)}
+                    value={search}
+                />
+            </View>
             <View style={{ flex: 1, paddingHorizontal: 16 }}>
-                <Text style={{ color: "white", fontSize: 22 }}>Movies</Text>
                 <View style={{ flex: 1, marginTop: 8 }}>
                     <FlatList
-                        data={data}
+                        data={dataArray}
                         // keyExtractor={(item) => item.imdbID.toString()}
                         renderItem={renderItem}
                         showsVerticalScrollIndicator={false}
                     />
-                    {/* <Button title="Get Movies" onPress={renderItem} /> */}
                 </View>
             </View>
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    input: {
+        marginRight: 200,
+        color: "#fff",
+        // borderWidth: 1,
+        // borderColor: "white",
+        // borderRadius: 10,
+        padding: 10,
+    },
+});
