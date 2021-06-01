@@ -13,20 +13,21 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import axios from "axios";
+import { ListItem } from "react-native-elements";
+import { Avatar } from "react-native-elements/dist/avatar/Avatar";
 
 export default function MovieList() {
     const [search, setSearch] = useState("");
     // console.log("This is working");
-    const dataArray = [];
-    const [data, setData] = useState({});
+    const [data, setData] = useState([]);
     const handleSearch = (text) => {
         setSearch(text);
         axios
-            .get(`http://www.omdbapi.com/?apikey=3620d507&t=${search}&p=10`)
-            .then((res) => {
-                if (res.data) {
-                    setData(res.data);
-                    console.log(dataArray);
+            .get(`http://www.omdbapi.com/?apikey=3620d507&s=${search}`)
+            .then((response) => {
+                if (response.data.Search) {
+                    setData(response.data.Search);
+                    // console.log("Search Data =>", res.data.Search);
                 }
                 // dataArray.push(data);
                 // console.log(dataArray);
@@ -35,75 +36,27 @@ export default function MovieList() {
                 console.log(err);
             });
     };
-    dataArray.push(data);
 
     const renderItem = ({ item }) => {
-        // console.log(item.title);
-        console.log("renderItem works");
         return (
-            <View style={{ marginVertical: 12 }}>
-                <View style={{ flexDirection: "row", flex: 1 }}>
-                    {/* Movie Poster */}
-                    <Image
-                        source={{ uri: item.Poster }}
-                        resizeMode="cover"
-                        style={{ width: 100, height: 150 }}
-                    />
-                    <View style={{ flex: 1, marginLeft: 12 }}>
-                        <View>
-                            <Text
-                                style={{
-                                    fontSize: 22,
-                                    paddingRight: 16,
-                                    color: "white",
-                                }}
-                            >
-                                {item.Title}
-                            </Text>
-                        </View>
-                        <View
-                            style={{
-                                flexDirection: "row",
-                                marginTop: 10,
-                                alignItems: "center",
-                            }}
-                        >
-                            <TouchableOpacity>
-                                <MaterialCommunityIcons
-                                    color="#64676D"
-                                    name="heart"
-                                    size={20}
-                                    // style={{paddingLeft: 16}}
-                                />
-                            </TouchableOpacity>
-                            <MaterialCommunityIcons
-                                color="#64676D"
-                                name="star"
-                                size={20}
-                                style={{ paddingLeft: 16 }}
-                            />
-
-                            <Text style={{ paddingLeft: 5, color: "#64676D" }}>
-                                {item.imdbRating}
-                            </Text>
-                            <MaterialCommunityIcons
-                                color="#64676D"
-                                name="eye"
-                                size={20}
-                                style={{ paddingLeft: 16 }}
-                            />
-                            <Text style={{ paddingLeft: 5, color: "#64676D" }}>
-                                {item.Rated}
-                            </Text>
-                        </View>
-                        <View style={{ marginTop: 2 }}>
-                            <Text style={{ color: "#64676D" }}>
-                                {item.Plot}
-                            </Text>
-                        </View>
-                    </View>
-                </View>
-            </View>
+            <ListItem containerStyle={{ backgroundColor: "#1e1B26" }}>
+                <Avatar source={{ uri: item.Poster }} size={60} />
+                <ListItem.Content>
+                    <ListItem.Title style={{ color: "white" }}>
+                        {item.Title}
+                    </ListItem.Title>
+                    <TouchableOpacity>
+                        <ListItem.Chevron
+                            size={20}
+                            iconProps={{ name: "add" }}
+                            style={{ marginLeft: 250 }}
+                        />
+                    </TouchableOpacity>
+                    <ListItem.Subtitle style={{ color: "#64676D" }}>
+                        {item.Year}
+                    </ListItem.Subtitle>
+                </ListItem.Content>
+            </ListItem>
         );
     };
 
@@ -135,8 +88,8 @@ export default function MovieList() {
             <View style={{ flex: 1, paddingHorizontal: 16 }}>
                 <View style={{ flex: 1, marginTop: 8 }}>
                     <FlatList
-                        data={dataArray}
-                        // keyExtractor={(item) => item.imdbID.toString()}
+                        data={data}
+                        keyExtractor={(item, index) => index.toString()}
                         renderItem={renderItem}
                         showsVerticalScrollIndicator={false}
                     />
