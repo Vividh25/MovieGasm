@@ -71,7 +71,7 @@ export default function Home() {
             </View>
         );
     } else {
-        return <MovieList />;
+        return <MovieList userName={name} />;
     }
 }
 

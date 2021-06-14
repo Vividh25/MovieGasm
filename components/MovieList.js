@@ -15,8 +15,10 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import axios from "axios";
 import { ListItem } from "react-native-elements";
 import { Avatar } from "react-native-elements/dist/avatar/Avatar";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function MovieList() {
+export default function MovieList(props) {
+    const movieArray = [];
     const [search, setSearch] = useState("");
     // console.log("This is working");
     const [data, setData] = useState([]);
@@ -37,6 +39,21 @@ export default function MovieList() {
             });
     };
 
+    const addMovie = async (item) => {
+        // console.log("hello");
+        console.log(item);
+        movieArray.push(item);
+        console.log("Heres the array: ", movieArray);
+        try {
+            await AsyncStorage.setItem(
+                `${props.userName}movies`,
+                JSON.stringify(movieArray)
+            );
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     const renderItem = ({ item }) => {
         return (
             <ListItem containerStyle={{ backgroundColor: "#1e1B26" }}>
@@ -45,7 +62,11 @@ export default function MovieList() {
                     <ListItem.Title style={{ color: "white" }}>
                         {item.Title}
                     </ListItem.Title>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => {
+                            addMovie(item);
+                        }}
+                    >
                         <ListItem.Chevron
                             size={20}
                             iconProps={{ name: "add" }}
@@ -58,6 +79,7 @@ export default function MovieList() {
                 </ListItem.Content>
             </ListItem>
         );
+        // console.log(movieArray);
     };
 
     return (
